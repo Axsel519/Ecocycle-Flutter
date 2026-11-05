@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../core/api_service.dart';
 import '../widgets/custom_header.dart';
 
-enum UserRole { user, driver, admin }
+enum UserRole { user, driver, business }
 
 class RegisterScreen extends StatefulWidget {
   final VoidCallback? onHeaderProfilePressed;
@@ -74,7 +74,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _isLoading = true);
 
     final result = await ApiService.register(
-      String: _selectedRole.name,
       firstName: _firstNameController.text.trim(),
       lastName: _lastNameController.text.trim(),
       nationalId: _nationalIdController.text.trim(),
@@ -83,6 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: _emailController.text.trim(),
       password: _passwordController.text,
       avatarUrl: _base64Image,
+      String: _selectedRole.name,
     );
 
     if (!mounted) return;
@@ -370,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Expanded(child: _buildRoleOption(UserRole.user, 'User')),
                                 Expanded(child: _buildRoleOption(UserRole.driver, 'Driver')),
-                                Expanded(child: _buildRoleOption(UserRole.admin, 'Admin')),
+                                Expanded(child: _buildRoleOption(UserRole.business, 'Business')),
                               ],
                             ),
                           ),

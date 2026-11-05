@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import '../core/api_service.dart';
 import '../widgets/custom_header.dart';
 
+enum UserRole { user, driver, admin }
+
 class RegisterScreen extends StatefulWidget {
   final VoidCallback? onHeaderProfilePressed;
   final VoidCallback? onNavigateToLogin;
@@ -38,6 +40,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  // Role selection
+  UserRole _selectedRole = UserRole.user; // default = User
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
@@ -69,6 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _isLoading = true);
 
     final result = await ApiService.register(
+      String: _selectedRole.name,
       firstName: _firstNameController.text.trim(),
       lastName: _lastNameController.text.trim(),
       nationalId: _nationalIdController.text.trim(),
@@ -137,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: Border.all(color: const Color(0xFFE2E8F0)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.black.withValues(alpha: 0.04),
                           blurRadius: 20,
                           offset: const Offset(0, 8),
                         ),
@@ -193,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           border: Border.all(color: const Color(0xFF0D5C46), width: 3),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.06),
+                                              color: Colors.black.withValues(alpha: 0.06),
                                               blurRadius: 10,
                                               offset: const Offset(0, 4),
                                             ),
@@ -340,6 +346,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             showPassword: _showConfirmPassword,
                             onTogglePassword: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
                           ),
+
+                          // Role selection
+                          const SizedBox(height: 24),
+                          const Text(
+                            'ACCOUNT TYPE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF334155),
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF8FAFC),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: const Color(0xFFCBD5E1)),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(child: _buildRoleOption(UserRole.user, 'User')),
+                                Expanded(child: _buildRoleOption(UserRole.driver, 'Driver')),
+                                Expanded(child: _buildRoleOption(UserRole.admin, 'Admin')),
+                              ],
+                            ),
+                          ),
+
                           const SizedBox(height: 22),
                           ElevatedButton(
                             onPressed: _isLoading ? null : _handleSubmit,
@@ -381,6 +416,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRoleOption(UserRole role, String label) {
+    final bool isSelected = _selectedRole == role;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedRole = role),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF0D5C46) : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: isSelected
+              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 6, offset: const Offset(0, 2))]
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : const Color(0xFF334155),
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -438,9 +501,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   )
                 : null,
             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFCBD5E1))),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFFCBD5E1))),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Color(0xFF0D5C46), width: 1.5)),
           ),
         ),
       ],

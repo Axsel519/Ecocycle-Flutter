@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../core/api_service.dart';
 import '../widgets/custom_header.dart';
 
@@ -32,7 +34,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   String? _base64Image;
   bool _showPassword = false;
@@ -67,7 +70,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     if (_nationalIdController.text.trim().length != 14) {
-      setState(() => _errorMessage = "National ID number must be exactly 14 digits.");
+      setState(
+        () => _errorMessage = "National ID number must be exactly 14 digits.",
+      );
       return;
     }
 
@@ -165,10 +170,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 18),
-                          if (_errorMessage != null && (_errorMessage?.trim().length ?? 0) > 0)
+                          if (_errorMessage != null &&
+                              (_errorMessage?.trim().length ?? 0) > 0)
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
-                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 12,
+                              ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFFFE4E6),
                                 borderRadius: BorderRadius.circular(8),
@@ -196,10 +205,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: const Color(0xFFE6F4EA),
-                                          border: Border.all(color: const Color(0xFF0D5C46), width: 3),
+                                          border: Border.all(
+                                            color: const Color(0xFF0D5C46),
+                                            width: 3,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withValues(alpha: 0.06),
+                                              color: Colors.black.withValues(
+                                                alpha: 0.06,
+                                              ),
                                               blurRadius: 10,
                                               offset: const Offset(0, 4),
                                             ),
@@ -208,7 +222,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         child: ClipOval(
                                           child: _base64Image != null
                                               ? Image.memory(
-                                                  base64Decode(_base64Image!.split(',').last),
+                                                  base64Decode(
+                                                    _base64Image!
+                                                        .split(',')
+                                                        .last,
+                                                  ),
                                                   fit: BoxFit.cover,
                                                 )
                                               : const Icon(
@@ -227,9 +245,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           decoration: BoxDecoration(
                                             color: const Color(0xFF0D5C46),
                                             shape: BoxShape.circle,
-                                            border: Border.all(color: Colors.white, width: 2),
+                                            border: Border.all(
+                                              color: Colors.white,
+                                              width: 2,
+                                            ),
                                           ),
-                                          child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                                          child: const Icon(
+                                            Icons.camera_alt,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -237,7 +262,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   const SizedBox(height: 6),
                                   const Text(
                                     'Upload Photo',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF0D5C46)),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF0D5C46),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -322,7 +351,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             validator: (val) {
                               final text = val ?? '';
                               if (text.isEmpty) return 'Email is required';
-                              if (!text.contains('@')) return 'Enter a valid email';
+                              if (!text.contains('@'))
+                                return 'Enter a valid email';
                               return null;
                             },
                           ),
@@ -334,7 +364,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             prefixIcon: Icons.lock_outline,
                             isPassword: true,
                             showPassword: _showPassword,
-                            onTogglePassword: () => setState(() => _showPassword = !_showPassword),
+                            onTogglePassword: () =>
+                                setState(() => _showPassword = !_showPassword),
                           ),
                           const SizedBox(height: 12),
                           _buildInputField(
@@ -344,10 +375,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             prefixIcon: Icons.lock_outline,
                             isPassword: true,
                             showPassword: _showConfirmPassword,
-                            onTogglePassword: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
+                            onTogglePassword: () => setState(
+                              () =>
+                                  _showConfirmPassword = !_showConfirmPassword,
+                            ),
                           ),
 
-                          // Role selection
                           const SizedBox(height: 24),
                           const Text(
                             'ACCOUNT TYPE',
@@ -364,14 +397,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             decoration: BoxDecoration(
                               color: const Color(0xFFF8FAFC),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFCBD5E1)),
+                              border: Border.all(
+                                color: const Color(0xFFCBD5E1),
+                              ),
                             ),
-                            child: Row(
-                              children: [
-                                Expanded(child: _buildRoleOption(UserRole.user, 'User')),
-                                Expanded(child: _buildRoleOption(UserRole.driver, 'Driver')),
-                                Expanded(child: _buildRoleOption(UserRole.business, 'Business')),
-                              ],
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<UserRole>(
+                                value: _selectedRole,
+                                isExpanded: true,
+                                icon: const Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Color(0xFF0D5C46),
+                                ),
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: UserRole.user,
+                                    child: Text('User'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: UserRole.driver,
+                                    child: Text('Delivery'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: UserRole.business,
+                                    child: Text('Business'),
+                                  ),
+                                ],
+                                onChanged: (role) {
+                                  if (role != null) {
+                                    setState(() => _selectedRole = role);
+                                  }
+                                },
+                              ),
                             ),
                           ),
 
@@ -382,27 +439,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               backgroundColor: const Color(0xFF0D5C46),
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                               elevation: 0,
                             ),
                             child: _isLoading
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
-                                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
                                   )
-                                : const Text('Create Account', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                : const Text(
+                                    'Create Account',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                           const SizedBox(height: 14),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text("Already have an account? ", style: TextStyle(fontSize: 12.5, color: Color(0xFF64748B))),
+                              const Text(
+                                "Already have an account? ",
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  color: Color(0xFF64748B),
+                                ),
+                              ),
                               GestureDetector(
                                 onTap: widget.onNavigateToLogin,
                                 child: const Text(
                                   'Sign In',
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Color(0xFF0D5C46)),
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF0D5C46),
+                                  ),
                                 ),
                               ),
                             ],
@@ -416,34 +494,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildRoleOption(UserRole role, String label) {
-    final bool isSelected = _selectedRole == role;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedRole = role),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0D5C46) : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: isSelected
-              ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 6, offset: const Offset(0, 2))]
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.white : const Color(0xFF334155),
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -478,9 +528,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           keyboardType: keyboardType,
           obscureText: isPassword && !showPassword,
           maxLength: maxLength,
-          validator: validator ??
+          validator:
+              validator ??
               (value) {
-                if (value == null || value.trim().isEmpty) return 'This field is required';
+                if (value == null || value.trim().isEmpty)
+                  return 'This field is required';
                 return null;
               },
           decoration: InputDecoration(
@@ -489,18 +541,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
             filled: true,
             fillColor: const Color(0xFFF8FAFC),
-            prefixIcon: Icon(prefixIcon, color: const Color(0xFF0D5C46), size: 20),
+            prefixIcon: Icon(
+              prefixIcon,
+              color: const Color(0xFF0D5C46),
+              size: 20,
+            ),
             suffixIcon: isPassword
                 ? IconButton(
                     icon: Icon(
-                      showPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      showPassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: const Color(0xFF0D5C46),
                       size: 20,
                     ),
                     onPressed: onTogglePassword,
                   )
                 : null,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
           ),
         ),
       ],
